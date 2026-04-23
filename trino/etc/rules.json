@@ -48,22 +48,14 @@
       "catalog": "postgres_retail",
       "schema": "public",
       "table": "products",
-      "privileges": ["SELECT"],
-      "filter": "true",
-      "filter_environment": {
-        "user": "USER"
-      }
+      "privileges": ["SELECT"]
     },
     {
       "group": "analyst",
       "catalog": "mysql_inventory",
       "schema": "inventory",
       "table": "sales",
-      "privileges": ["SELECT"],
-      "filter": "true",
-      "filter_environment": {
-        "user": "USER"
-      }
+      "privileges": ["SELECT"]
     },
     {
       "group": "analyst",
@@ -80,7 +72,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'accessories'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -91,7 +83,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'accessories'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -102,7 +94,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'accessories'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -113,7 +105,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'accessories'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -124,7 +116,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'electronics'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -135,7 +127,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'electronics'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -146,7 +138,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'electronics'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -157,7 +149,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'electronics'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -168,7 +160,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'apparel'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -179,7 +171,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'apparel'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -190,7 +182,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'apparel'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -201,7 +193,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'apparel'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -212,7 +204,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'home_garden'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -223,7 +215,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'home_garden'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -234,7 +226,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'home_garden'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -245,7 +237,7 @@
       "privileges": ["SELECT"],
       "filter": "department = 'home_garden'",
       "filter_environment": {
-        "user": "USER"
+        "user": "data_admin"
       }
     },
     {
@@ -259,21 +251,21 @@
           "name": "email",
           "mask": "'***@***.***'",
           "mask_environment": {
-            "user": "USER"
+            "user": "data_admin"
           }
         },
         {
           "name": "phone",
           "mask": "'XXX-XXXX'",
           "mask_environment": {
-            "user": "USER"
+            "user": "data_admin"
           }
         },
         {
           "name": "address",
           "mask": "'[REDACTED]'",
           "mask_environment": {
-            "user": "USER"
+            "user": "data_admin"
           }
         }
       ]
@@ -289,21 +281,21 @@
           "name": "email",
           "mask": "'***@***.***'",
           "mask_environment": {
-            "user": "USER"
+            "user": "data_admin"
           }
         },
         {
           "name": "phone",
           "mask": "'XXX-XXXX'",
           "mask_environment": {
-            "user": "USER"
+            "user": "data_admin"
           }
         },
         {
           "name": "address",
           "mask": "'[REDACTED]'",
           "mask_environment": {
-            "user": "USER"
+            "user": "data_admin"
           }
         }
       ]
