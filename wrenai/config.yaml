@@ -1,0 +1,38 @@
+# =============================================================================
+# WrenAI AI Service Configuration
+# =============================================================================
+
+# LLM Configuration
+type: llm
+provider: litellm_llm
+timeout: 120
+models:
+  - alias: default
+    model: gpt-4o-mini
+    kwargs:
+      temperature: 0
+
+---
+# Embedding Configuration
+type: embedder
+provider: litellm_embedder
+models:
+  - alias: default
+    model: text-embedding-3-large
+    api_base: https://api.openai.com/v1
+    timeout: 120
+
+---
+# Document Store (Qdrant) Configuration
+type: document_store
+provider: qdrant
+location: http://qdrant:6333
+embedding_model_dim: 3072
+timeout: 120
+recreate_index: false
+
+---
+# Engine Configuration
+type: engine
+provider: wren_ui
+endpoint: http://wren-ui:3000

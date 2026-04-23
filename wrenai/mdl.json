@@ -1,0 +1,499 @@
+{
+  "catalog": "postgres_retail",
+  "schema": "public",
+  "models": [
+    {
+      "name": "product",
+      "refSql": "SELECT * FROM postgres_retail.public.products",
+      "columns": [
+        {
+          "name": "product_id",
+          "type": "integer",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Unique auto-incrementing product identifier"
+          }
+        },
+        {
+          "name": "sku",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Stock Keeping Unit — unique product code (e.g., ACC-001, ELC-005). Format: 3-letter department prefix + dash + 3-digit number."
+          }
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Human-readable product name (e.g., 'Classic Leather Belt', 'UltraSlim Laptop 15\"')"
+          }
+        },
+        {
+          "name": "department",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Department the product belongs to. Also called 'category' or 'vertical'. Values: accessories, electronics, apparel, home_garden."
+          }
+        },
+        {
+          "name": "category",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Product sub-category within the department (e.g., 'Bags', 'Laptops', 'Footwear', 'Kitchenware')"
+          }
+        },
+        {
+          "name": "brand",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Brand or manufacturer name (e.g., 'TechNova', 'Heritage Co.', 'UrbanThread')"
+          }
+        },
+        {
+          "name": "price",
+          "type": "decimal",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Retail selling price in USD. This is the price the customer pays."
+          }
+        },
+        {
+          "name": "cost",
+          "type": "decimal",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Wholesale cost in USD. The price the retailer pays to acquire the product. Used to calculate margin."
+          }
+        },
+        {
+          "name": "launched_at",
+          "type": "date",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Date the product was first launched or made available for sale"
+          }
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Whether the product is currently active and available for sale. True means it is active."
+          }
+        }
+      ],
+      "primaryKey": "sku",
+      "properties": {
+        "description": "Products available in the retail catalog, spanning accessories, electronics, apparel, and home & garden departments."
+      }
+    },
+    {
+      "name": "customer",
+      "refSql": "SELECT * FROM postgres_retail.public.customers",
+      "columns": [
+        {
+          "name": "customer_id",
+          "type": "integer",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Unique auto-incrementing customer identifier"
+          }
+        },
+        {
+          "name": "first_name",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Customer's first name"
+          }
+        },
+        {
+          "name": "last_name",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Customer's last name (family name)"
+          }
+        },
+        {
+          "name": "email",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Customer email address. This is PII and may be masked for non-admin users."
+          }
+        },
+        {
+          "name": "phone",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Customer phone number. This is PII and may be masked for non-admin users."
+          }
+        },
+        {
+          "name": "city",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "City where the customer is located"
+          }
+        },
+        {
+          "name": "state",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "US state abbreviation (e.g., NY, CA, TX)"
+          }
+        },
+        {
+          "name": "loyalty_tier",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Customer loyalty program tier. Values: bronze, silver, gold, platinum. Higher tiers indicate more valuable customers."
+          }
+        },
+        {
+          "name": "registered_at",
+          "type": "date",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Date the customer first registered with the retail platform"
+          }
+        }
+      ],
+      "primaryKey": "customer_id",
+      "properties": {
+        "description": "Retail customers with contact information and loyalty program data. PII fields (email, phone, address) are masked for non-admin users."
+      }
+    },
+    {
+      "name": "sale",
+      "refSql": "SELECT * FROM mysql_inventory.inventory.sales",
+      "columns": [
+        {
+          "name": "sale_id",
+          "type": "integer",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Unique auto-incrementing sale transaction identifier"
+          }
+        },
+        {
+          "name": "sku",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Stock Keeping Unit of the product sold. Links to product.sku."
+          }
+        },
+        {
+          "name": "department",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Department of the product sold. Values: accessories, electronics, apparel, home_garden. Used for RBAC filtering."
+          }
+        },
+        {
+          "name": "customer_id",
+          "type": "integer",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "ID of the customer who made the purchase. Links to customer.customer_id."
+          }
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Number of units sold in this transaction"
+          }
+        },
+        {
+          "name": "unit_price",
+          "type": "decimal",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Price per unit at the time of sale in USD (before discount)"
+          }
+        },
+        {
+          "name": "total_amount",
+          "type": "decimal",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Total transaction amount in USD (quantity × unit_price, before discount)"
+          }
+        },
+        {
+          "name": "discount_pct",
+          "type": "decimal",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Discount percentage applied to this sale. 0.00 means no discount. Example: 10.00 means 10% off."
+          }
+        },
+        {
+          "name": "sold_at",
+          "type": "timestamp",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Date and time when the sale occurred. Use for time-based analysis (daily, weekly, monthly trends)."
+          }
+        },
+        {
+          "name": "channel",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Sales channel. Values: 'online' (e-commerce) or 'store' (in-store/physical retail)."
+          }
+        }
+      ],
+      "primaryKey": "sale_id",
+      "properties": {
+        "description": "Individual sale transactions from the inventory system. Each record represents one line item in a sale, linking a product (by SKU) to a customer."
+      }
+    },
+    {
+      "name": "supplier",
+      "refSql": "SELECT * FROM mysql_inventory.inventory.suppliers",
+      "columns": [
+        {
+          "name": "supplier_id",
+          "type": "integer",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Unique auto-incrementing supplier identifier"
+          }
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Supplier company name"
+          }
+        },
+        {
+          "name": "department",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Department this supplier provides products for. Values: accessories, electronics, apparel, home_garden."
+          }
+        },
+        {
+          "name": "country",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Country where the supplier is based"
+          }
+        },
+        {
+          "name": "rating",
+          "type": "decimal",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Supplier quality rating from 1.0 (poor) to 5.0 (excellent). Used for procurement decisions."
+          }
+        }
+      ],
+      "primaryKey": "supplier_id",
+      "properties": {
+        "description": "Product suppliers/vendors grouped by department. Includes quality ratings and country of origin."
+      }
+    },
+    {
+      "name": "warehouse_stock",
+      "refSql": "SELECT * FROM mysql_inventory.inventory.warehouse_stock",
+      "columns": [
+        {
+          "name": "stock_id",
+          "type": "integer",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Unique stock record identifier"
+          }
+        },
+        {
+          "name": "sku",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Stock Keeping Unit of the product. Links to product.sku."
+          }
+        },
+        {
+          "name": "department",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Department of the product. Values: accessories, electronics, apparel, home_garden."
+          }
+        },
+        {
+          "name": "warehouse",
+          "type": "varchar",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Warehouse location code. Values: EAST-01, WEST-01, CENTRAL-01. Represents physical distribution centers."
+          }
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Current stock quantity available in this warehouse for this product"
+          }
+        },
+        {
+          "name": "reorder_level",
+          "type": "integer",
+          "isCalculated": false,
+          "notNull": true,
+          "properties": {
+            "description": "Minimum stock level before a reorder is triggered. If quantity drops below this, the product needs restocking."
+          }
+        },
+        {
+          "name": "last_restocked",
+          "type": "date",
+          "isCalculated": false,
+          "notNull": false,
+          "properties": {
+            "description": "Date when this product was last restocked at this warehouse"
+          }
+        }
+      ],
+      "primaryKey": "stock_id",
+      "properties": {
+        "description": "Current inventory levels per product per warehouse location. Used for stock management, reorder alerts, and supply chain visibility."
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "name": "sale_product",
+      "models": ["sale", "product"],
+      "joinType": "MANY_TO_ONE",
+      "condition": "sale.sku = product.sku"
+    },
+    {
+      "name": "sale_customer",
+      "models": ["sale", "customer"],
+      "joinType": "MANY_TO_ONE",
+      "condition": "sale.customer_id = customer.customer_id"
+    },
+    {
+      "name": "stock_product",
+      "models": ["warehouse_stock", "product"],
+      "joinType": "MANY_TO_ONE",
+      "condition": "warehouse_stock.sku = product.sku"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "total_revenue",
+      "baseModel": "sale",
+      "dimension": [
+        {
+          "name": "department",
+          "type": "varchar",
+          "expression": "sale.department"
+        },
+        {
+          "name": "channel",
+          "type": "varchar",
+          "expression": "sale.channel"
+        }
+      ],
+      "measure": [
+        {
+          "name": "revenue",
+          "type": "decimal",
+          "expression": "SUM(sale.total_amount)",
+          "properties": {
+            "description": "Total revenue from sales (sum of total_amount)"
+          }
+        },
+        {
+          "name": "units_sold",
+          "type": "integer",
+          "expression": "SUM(sale.quantity)",
+          "properties": {
+            "description": "Total number of units sold"
+          }
+        },
+        {
+          "name": "transaction_count",
+          "type": "integer",
+          "expression": "COUNT(sale.sale_id)",
+          "properties": {
+            "description": "Number of sale transactions"
+          }
+        }
+      ],
+      "timeGrain": [
+        {
+          "name": "sold_at",
+          "refColumn": "sale.sold_at",
+          "dateParts": ["DAY", "WEEK", "MONTH", "QUARTER", "YEAR"]
+        }
+      ],
+      "properties": {
+        "description": "Revenue metrics broken down by department, channel, and time period"
+      }
+    }
+  ]
+}

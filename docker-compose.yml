@@ -1,0 +1,205 @@
+# =============================================================================
+# NL-Query: Natural Language Search over Trino with RBAC
+# =============================================================================
+# docker compose up -d
+# =============================================================================
+
+networks:
+  nl-query:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  mysql-data:
+  qdrant-data:
+  wren-data:
+
+services:
+  # ---------------------------------------------------------------------------
+  # Data Sources
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: nlq-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-retail_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-retail_secret_2024}
+      POSTGRES_DB: ${POSTGRES_DB:-retail}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    networks:
+      - nl-query
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-retail_admin} -d ${POSTGRES_DB:-retail}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mysql:
+    image: mysql:8.0
+    container_name: nlq-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-mysql_root_2024}
+      MYSQL_USER: ${MYSQL_USER:-inventory_admin}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-inventory_secret_2024}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-inventory}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db/mysql/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    networks:
+      - nl-query
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-mysql_root_2024}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # Trino — Federated Query Engine with RBAC
+  # ---------------------------------------------------------------------------
+  trino:
+    image: trinodb/trino:467
+    container_name: nlq-trino
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./trino/etc:/etc/trino:ro
+    networks:
+      - nl-query
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/v1/info | grep -q '\"starting\":false'"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # WrenAI Stack — Natural Language to SQL
+  # ---------------------------------------------------------------------------
+  bootstrap:
+    image: ghcr.io/canner/wren-bootstrap:0.1.5
+    container_name: nlq-bootstrap
+    restart: on-failure
+    platform: ${PLATFORM:-linux/amd64}
+    environment:
+      DATA_PATH: /app/data
+    volumes:
+      - wren-data:/app/data
+    command: /bin/sh /app/init.sh
+    networks:
+      - nl-query
+
+  wren-engine:
+    image: ghcr.io/canner/wren-engine:0.22.0
+    container_name: nlq-wren-engine
+    restart: unless-stopped
+    platform: ${PLATFORM:-linux/amd64}
+    expose:
+      - "8080"
+      - "7432"
+    volumes:
+      - wren-data:/usr/src/app/etc
+      - ./wrenai/data:/usr/src/app/data
+    networks:
+      - nl-query
+    depends_on:
+      - bootstrap
+
+  ibis-server:
+    image: ghcr.io/canner/wren-engine-ibis:0.22.0
+    container_name: nlq-ibis-server
+    restart: unless-stopped
+    platform: ${PLATFORM:-linux/amd64}
+    expose:
+      - "8000"
+    environment:
+      WREN_ENGINE_ENDPOINT: http://wren-engine:8080
+    networks:
+      - nl-query
+    depends_on:
+      - wren-engine
+
+  qdrant:
+    image: qdrant/qdrant:v1.15.0
+    container_name: nlq-qdrant
+    restart: unless-stopped
+    expose:
+      - "6333"
+      - "6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    networks:
+      - nl-query
+
+  wren-ai-service:
+    image: ghcr.io/canner/wren-ai-service:0.29.0
+    container_name: nlq-wren-ai
+    restart: unless-stopped
+    platform: ${PLATFORM:-linux/amd64}
+    expose:
+      - "5555"
+    ports:
+      - "5555:5555"
+    environment:
+      PYTHONUNBUFFERED: 1
+      CONFIG_PATH: /app/config.yaml
+      OPENAI_API_KEY: ${OPENAI_API_KEY:?OPENAI_API_KEY is required}
+      QDRANT_HOST: qdrant
+      SHOULD_FORCE_DEPLOY: 1
+    volumes:
+      - ./wrenai/config.yaml:/app/config.yaml:ro
+      - ./wrenai/data:/app/data:ro
+    networks:
+      - nl-query
+    depends_on:
+      - qdrant
+
+  wren-ui:
+    image: ghcr.io/canner/wren-ui:0.32.2
+    container_name: nlq-wren-ui
+    restart: unless-stopped
+    platform: ${PLATFORM:-linux/amd64}
+    environment:
+      DB_TYPE: sqlite
+      SQLITE_FILE: /app/data/db.sqlite3
+      WREN_ENGINE_ENDPOINT: http://wren-engine:8080
+      WREN_AI_ENDPOINT: http://wren-ai-service:5555
+      IBIS_SERVER_ENDPOINT: http://ibis-server:8000
+      GENERATION_MODEL: ${GENERATION_MODEL:-gpt-4o-mini}
+      WREN_ENGINE_PORT: 8080
+      WREN_AI_SERVICE_VERSION: 0.29.0
+      WREN_UI_VERSION: 0.32.2
+      WREN_ENGINE_VERSION: 0.22.0
+      WREN_PRODUCT_VERSION: 0.29.1
+      USER_UUID: ${USER_UUID:-}
+      POSTHOG_API_KEY: ${POSTHOG_API_KEY:-}
+      POSTHOG_HOST: ${POSTHOG_HOST:-https://app.posthog.com}
+      TELEMETRY_ENABLED: ${TELEMETRY_ENABLED:-false}
+      NEXT_PUBLIC_USER_UUID: ${USER_UUID:-}
+      NEXT_PUBLIC_POSTHOG_API_KEY: ${POSTHOG_API_KEY:-}
+      NEXT_PUBLIC_POSTHOG_HOST: ${POSTHOG_HOST:-https://app.posthog.com}
+      NEXT_PUBLIC_TELEMETRY_ENABLED: ${TELEMETRY_ENABLED:-false}
+      EXPERIMENTAL_ENGINE_RUST_VERSION: "false"
+    ports:
+      - "${HOST_PORT:-3000}:3000"
+    volumes:
+      - wren-data:/app/data
+    networks:
+      - nl-query
+    depends_on:
+      - wren-ai-service
+      - wren-engine
+      - ibis-server

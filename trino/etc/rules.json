@@ -1,0 +1,340 @@
+{
+  "catalogs": [
+    {
+      "group": "admin",
+      "catalog": ".*",
+      "allow": "all"
+    },
+    {
+      "group": "analyst",
+      "catalog": ".*",
+      "allow": "read-only"
+    },
+    {
+      "group": "accessories_dept",
+      "catalog": "(postgres_retail|mysql_inventory)",
+      "allow": "read-only"
+    },
+    {
+      "group": "electronics_dept",
+      "catalog": "(postgres_retail|mysql_inventory)",
+      "allow": "read-only"
+    },
+    {
+      "group": "apparel_dept",
+      "catalog": "(postgres_retail|mysql_inventory)",
+      "allow": "read-only"
+    },
+    {
+      "group": "home_garden_dept",
+      "catalog": "(postgres_retail|mysql_inventory)",
+      "allow": "read-only"
+    },
+    {
+      "catalog": "system",
+      "allow": "read-only"
+    }
+  ],
+  "tables": [
+    {
+      "group": "admin",
+      "catalog": ".*",
+      "schema": ".*",
+      "table": ".*",
+      "privileges": ["SELECT", "INSERT", "DELETE", "UPDATE", "OWNERSHIP", "GRANT_SELECT"]
+    },
+    {
+      "group": "analyst",
+      "catalog": "postgres_retail",
+      "schema": "public",
+      "table": "products",
+      "privileges": ["SELECT"],
+      "filter": "true",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "analyst",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "sales",
+      "privileges": ["SELECT"],
+      "filter": "true",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "analyst",
+      "catalog": ".*",
+      "schema": ".*",
+      "table": ".*",
+      "privileges": ["SELECT"]
+    },
+    {
+      "group": "accessories_dept",
+      "catalog": "postgres_retail",
+      "schema": "public",
+      "table": "products",
+      "privileges": ["SELECT"],
+      "filter": "department = 'accessories'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "accessories_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "sales",
+      "privileges": ["SELECT"],
+      "filter": "department = 'accessories'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "accessories_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "warehouse_stock",
+      "privileges": ["SELECT"],
+      "filter": "department = 'accessories'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "accessories_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "suppliers",
+      "privileges": ["SELECT"],
+      "filter": "department = 'accessories'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "electronics_dept",
+      "catalog": "postgres_retail",
+      "schema": "public",
+      "table": "products",
+      "privileges": ["SELECT"],
+      "filter": "department = 'electronics'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "electronics_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "sales",
+      "privileges": ["SELECT"],
+      "filter": "department = 'electronics'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "electronics_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "warehouse_stock",
+      "privileges": ["SELECT"],
+      "filter": "department = 'electronics'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "electronics_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "suppliers",
+      "privileges": ["SELECT"],
+      "filter": "department = 'electronics'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "apparel_dept",
+      "catalog": "postgres_retail",
+      "schema": "public",
+      "table": "products",
+      "privileges": ["SELECT"],
+      "filter": "department = 'apparel'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "apparel_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "sales",
+      "privileges": ["SELECT"],
+      "filter": "department = 'apparel'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "apparel_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "warehouse_stock",
+      "privileges": ["SELECT"],
+      "filter": "department = 'apparel'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "apparel_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "suppliers",
+      "privileges": ["SELECT"],
+      "filter": "department = 'apparel'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "home_garden_dept",
+      "catalog": "postgres_retail",
+      "schema": "public",
+      "table": "products",
+      "privileges": ["SELECT"],
+      "filter": "department = 'home_garden'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "home_garden_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "sales",
+      "privileges": ["SELECT"],
+      "filter": "department = 'home_garden'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "home_garden_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "warehouse_stock",
+      "privileges": ["SELECT"],
+      "filter": "department = 'home_garden'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "home_garden_dept",
+      "catalog": "mysql_inventory",
+      "schema": "inventory",
+      "table": "suppliers",
+      "privileges": ["SELECT"],
+      "filter": "department = 'home_garden'",
+      "filter_environment": {
+        "user": "USER"
+      }
+    },
+    {
+      "group": "(accessories_dept|electronics_dept|apparel_dept|home_garden_dept)",
+      "catalog": "postgres_retail",
+      "schema": "public",
+      "table": "customers",
+      "privileges": ["SELECT"],
+      "columns": [
+        {
+          "name": "email",
+          "mask": "'***@***.***'",
+          "mask_environment": {
+            "user": "USER"
+          }
+        },
+        {
+          "name": "phone",
+          "mask": "'XXX-XXXX'",
+          "mask_environment": {
+            "user": "USER"
+          }
+        },
+        {
+          "name": "address",
+          "mask": "'[REDACTED]'",
+          "mask_environment": {
+            "user": "USER"
+          }
+        }
+      ]
+    },
+    {
+      "group": "analyst",
+      "catalog": "postgres_retail",
+      "schema": "public",
+      "table": "customers",
+      "privileges": ["SELECT"],
+      "columns": [
+        {
+          "name": "email",
+          "mask": "'***@***.***'",
+          "mask_environment": {
+            "user": "USER"
+          }
+        },
+        {
+          "name": "phone",
+          "mask": "'XXX-XXXX'",
+          "mask_environment": {
+            "user": "USER"
+          }
+        },
+        {
+          "name": "address",
+          "mask": "'[REDACTED]'",
+          "mask_environment": {
+            "user": "USER"
+          }
+        }
+      ]
+    },
+    {
+      "group": "(accessories_dept|electronics_dept|apparel_dept|home_garden_dept)",
+      "catalog": "postgres_retail",
+      "schema": "public",
+      "table": "departments",
+      "privileges": ["SELECT"]
+    },
+    {
+      "group": "(accessories_dept|electronics_dept|apparel_dept|home_garden_dept)",
+      "catalog": "postgres_retail",
+      "schema": "public",
+      "table": "user_department_map",
+      "privileges": ["SELECT"]
+    }
+  ],
+  "queries": [
+    {
+      "group": "admin",
+      "allow": ["execute", "kill", "view"]
+    },
+    {
+      "group": "analyst",
+      "allow": ["execute", "view"]
+    },
+    {
+      "group": "(accessories_dept|electronics_dept|apparel_dept|home_garden_dept)",
+      "allow": ["execute", "view"]
+    }
+  ]
+}

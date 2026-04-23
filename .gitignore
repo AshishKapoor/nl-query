@@ -1,0 +1,21 @@
+# Environment
+# .env
+
+# Docker volumes
+docker-data/
+postgres-data/
+mysql-data/
+qdrant-data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
