@@ -1,4 +1,4 @@
-# NL-Query: Natural Language Search over Trino with RBAC
+# NL-Query: Natural-Language based distributed Search over Trino with RBAC
 
 Natural language search over federated retail data sources (Postgres + MySQL) using [Trino](https://trino.io/) for distributed queries and [WrenAI](https://getwren.ai/) for NL-to-SQL translation. Includes department-level RBAC — a catalog manager in the Accessories department cannot see items in Electronics.
 

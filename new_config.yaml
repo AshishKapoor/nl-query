@@ -1,38 +1,59 @@
-# =============================================================================
-# WrenAI AI Service Configuration
-# =============================================================================
-
-# LLM Configuration
 type: llm
 provider: litellm_llm
 timeout: 120
 models:
   - alias: default
-    model: gpt-4o-mini
+    model: gpt-4.1-nano-2025-04-14
+    context_window_size: 1000000
     kwargs:
+      max_tokens: 4096
+      n: 1
+      seed: 0
       temperature: 0
-
+  - model: gpt-4.1-mini-2025-04-14
+    context_window_size: 1000000
+    kwargs:
+      max_tokens: 4096
+      n: 1
+      seed: 0
+      temperature: 0
+  - model: gpt-4.1-2025-04-14
+    context_window_size: 1000000
+    kwargs:
+      max_tokens: 4096
+      n: 1
+      seed: 0
+      temperature: 0
+  - model: gpt-5-nano-2025-08-07
+    context_window_size: 380000
+    kwargs:
+      max_completion_tokens: 4096
+      n: 1
+      seed: 0
+      reasoning_effort: minimal
+  - model: gpt-5-mini-2025-08-07
+    context_window_size: 380000
+    kwargs:
+      max_completion_tokens: 4096
+      n: 1
+      seed: 0
+      reasoning_effort: minimal
+  - model: gpt-5-2025-08-07
+    context_window_size: 380000
+    kwargs:
+      max_completion_tokens: 4096
+      n: 1
+      seed: 0
+      reasoning_effort: minimal
 ---
-# Embedding Configuration
 type: embedder
 provider: litellm_embedder
 models:
-  - alias: default
-    model: text-embedding-3-large
-    api_base: https://api.openai.com/v1
+  - model: text-embedding-3-large
+    alias: default
     timeout: 120
 
 ---
-# Document Store (Qdrant) Configuration
-type: document_store
-provider: qdrant
-location: http://qdrant:6333
-embedding_model_dim: 3072
-timeout: 120
-recreate_index: false
-
----
-# Engine Configuration
 type: engine
 provider: wren_ui
 endpoint: http://wren-ui:3000
@@ -41,6 +62,14 @@ endpoint: http://wren-ui:3000
 type: engine
 provider: wren_ibis
 endpoint: http://ibis-server:8000
+
+---
+type: document_store
+provider: qdrant
+location: http://qdrant:6333
+embedding_model_dim: 3072
+timeout: 120
+recreate_index: true
 
 ---
 type: pipeline
