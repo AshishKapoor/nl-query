@@ -65,6 +65,13 @@
       "privileges": ["SELECT"]
     },
     {
+      "group": "(accessories_dept|electronics_dept|apparel_dept|home_garden_dept)",
+      "catalog": "system",
+      "schema": ".*",
+      "table": ".*",
+      "privileges": ["SELECT"]
+    },
+    {
       "group": "accessories_dept",
       "catalog": "postgres_retail",
       "schema": "public",
